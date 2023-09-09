@@ -7,7 +7,7 @@ pipeline {
       }
     }
     stage('test') {
-      when{
+      when {
         expression {
           BRANCH_NAME == 'main'
         }
@@ -21,6 +21,20 @@ pipeline {
         echo 'Deploying the application...'
       }
     }
+  }
+  post {
+    always {
+      echo 'I don't know'
+    }
+    success {
+      echo 'It is successful'
+    }
+    failure {
+      echo 'It is failure'
+    }
+  }
+}
+
   }
   post{
     always{
