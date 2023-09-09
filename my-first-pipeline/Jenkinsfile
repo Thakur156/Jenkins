@@ -24,7 +24,7 @@ pipeline {
   }
   post {
     always {
-      echo 'I don''t know'
+      echo 'I dont know'
     }
     success {
       echo 'It is successful'
