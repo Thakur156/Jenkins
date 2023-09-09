@@ -35,31 +35,3 @@ pipeline {
   }
 }
 
-  }
-  post {
-    always {
-      echo 'I don't know'
-    }
-    success {
-      echo 'It is successful'
-    }
-    failure {
-      echo 'It is failure'
-    }
-  }
-}
-
-  }
-  post{
-    always{
-      echo'i dont know'
-    }
-    success{
-      echo'it is successful'
-    }
-    failure{
-      echo'it is failure'
-    }
-  }
-}
-
