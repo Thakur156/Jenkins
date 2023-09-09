@@ -24,6 +24,20 @@ pipeline {
   }
   post {
     always {
+      echo 'I don''t know'
+    }
+    success {
+      echo 'It is successful'
+    }
+    failure {
+      echo 'It is failure'
+    }
+  }
+}
+
+  }
+  post {
+    always {
       echo 'I don't know'
     }
     success {
