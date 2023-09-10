@@ -3,14 +3,16 @@ pipeline {
     
     environment {
         IMAGE_TAG = "${BUILD_NUMBER}"
+        GIT_REPO_NAME = "Jenkins"
+        GIT_USER_NAME = "Thakur156"
     }
     
     stages {
         
         stage('Checkout') {
-           steps {
-               echo 'Checking out the code'
-           }
+            steps {
+                echo 'Checking out the code'
+            }
         }
 
         stage('Build Docker') {
@@ -25,9 +27,9 @@ pipeline {
         }
 
         stage('Push the artifacts') {
-           steps {
+            steps {
                 script {
-                    withCredentials([usernamePassword(credentialsId: 'docker-cred', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+                    withCredentials([usernamePassword(credentialsId: 'your-credentials-id', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
                         sh '''
                         echo 'Push to Repo'
                         docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
@@ -40,10 +42,6 @@ pipeline {
         
         stage('Update K8S manifest & push to Repo') {
             steps {
-                environment {
-                    GIT_REPO_NAME = "Jenkins"
-                    GIT_USER_NAME = "Thakur156"
-                }
                 script {
                     withCredentials([string(credentialsId: 'github', variable: 'GITHUB_TOKEN')]) {
                         sh '''
@@ -61,5 +59,6 @@ pipeline {
         }
     }
 }
+
 
 
