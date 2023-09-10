@@ -36,14 +36,6 @@ pipeline {
             }
         }
         
-        stage('Checkout K8S manifest SCM'){
-            steps {
-                git credentialsId: 'f87a34a8-0e09-45e7-b9cf-6dc68feac670', 
-                url: 'https://github.com/iam-veeramalla/cicd-demo-manifests-repo.git',
-                branch: 'main'
-            }
-        }
-        
         stage('Update K8S manifest & push to Repo'){
             steps {
                 script{
@@ -53,7 +45,6 @@ pipeline {
                         cat deploy.yaml
                         git add python-jenkins-argocd-k8s/deploy/deploy.yaml
                         git commit -m "Update deployment image to version ${BUILD_NUMBER}"
-                        git remote -v
                         git push https://github.com/thakur156/python-jenkins-argocd-k8s/deploy HEAD:main
                         '''                        
                     }
