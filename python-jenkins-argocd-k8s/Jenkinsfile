@@ -3,55 +3,63 @@ pipeline {
     
     environment {
         IMAGE_TAG = "${BUILD_NUMBER}"
-        GIT_REPO_NAME = "Jenkins"
-        GIT_USER_NAME = "Thakur156"
     }
     
     stages {
-        stage('Checkout'){
-            steps {
-                echo 'checking out the code'
-            }
+        
+        stage('Checkout') {
+           steps {
+               echo 'Checking out the code'
+           }
         }
 
-        stage('Build Docker'){
+        stage('Build Docker') {
             steps {
                 script {
                     sh '''
                     echo 'Build Docker Image'
-                    cd 'python-jenkins-argocd-k8s' 
                     docker build -t thakur156/cicd-e2e:${BUILD_NUMBER} .
                     '''
                 }
             }
         }
 
-        stage('Push the artifacts'){
-            steps {
+        stage('Push the artifacts') {
+           steps {
                 script {
-                    sh '''
-                    echo 'Push to Repo'
-                    docker push thakur156/cicd-e2e:${BUILD_NUMBER}
-                    '''
+                    withCredentials([usernamePassword(credentialsId: 'docker-cred', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+                        sh '''
+                        echo 'Push to Repo'
+                        docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+                        docker push thakur156/cicd-e2e:${BUILD_NUMBER}
+                        '''
+                    }
                 }
             }
         }
         
-        stage('Update K8S manifest & push to Repo'){
+        stage('Update K8S manifest & push to Repo') {
             steps {
-                withCredentials([string(credentialsId: 'github', variable: 'GITHUB_TOKEN')]) {
-                    sh '''
-                    git config user.email "aliisrar156@gmail.com"
-                    git config user.name "thakur156"
-                    BUILD_NUMBER=${BUILD_NUMBER}
-                    sed -i "s/v1/${BUILD_NUMBER}/g" python-jenkins-argocd-k8s/deploy/deploy.yaml
-                    git add python-jenkins-argocd-k8s/deploy/deploy.yaml
-                    git commit -m "Update deployment image to version ${BUILD_NUMBER}"
-                    git push https://${GITHUB_TOKEN}@github.com/${GIT_USER_NAME}/${GIT_REPO_NAME} HEAD:main
-                    '''
+                environment {
+                    GIT_REPO_NAME = "Jenkins"
+                    GIT_USER_NAME = "Thakur156"
+                }
+                script {
+                    withCredentials([string(credentialsId: 'github', variable: 'GITHUB_TOKEN')]) {
+                        sh '''
+                        git config user.email "aliisrar156@gmail.com.com"
+                        git config user.name "thakur156"
+                        BUILD_NUMBER=${BUILD_NUMBER}
+                        sed -i "s/v1/${BUILD_NUMBER}/g" python-jenkins-argocd-k8s/deploy/deploy.yaml
+                        git add python-jenkins-argocd-k8s/deploy/deploy.yaml
+                        git commit -m "Update deployment image to version ${BUILD_NUMBER}"
+                        git push https://${GITHUB_TOKEN}@github.com/${GIT_USER_NAME}/${GIT_REPO_NAME} HEAD:main
+                        '''
+                    }
                 }
             }
         }
     }
 }
+
 
