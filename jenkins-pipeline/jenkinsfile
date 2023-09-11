@@ -6,11 +6,10 @@ pipeline{
                 echo 'Checkingout the stage'
             }
         }
-    
     stage("build"){
             steps{
                 docker build -t thakur156/jenkins-pipeline:latest
             }
         }
-    }
+}
 }
