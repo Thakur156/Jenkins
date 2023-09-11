@@ -5,7 +5,7 @@ FROM python:3.9
 WORKDIR /app
 
 # Copy the Python script into the container
-COPY hello.py .
+COPY . /app
 
 # Run the Python script when the container starts
 CMD ["python", "app.py"]
