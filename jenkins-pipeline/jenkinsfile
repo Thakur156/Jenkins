@@ -12,8 +12,16 @@ pipeline {
             steps {
                 dir('jenkins-pipeline') {
                     // Change the working directory to 'jenkins-pipeline' before running Docker build
-                    sh "docker build -t thakur156/jenkins-pipeline:latest ."
+                    sh "docker build -t thakur156/jenkins-pipeline:${BUILD_NUMBER} ."
                 }
+            }
+        }
+    stage("push") {
+            steps {
+                enviornment{
+                    DOCKER_IMAGE = "thakur156/jenkins-pipeline:${BUILD_NUMBER}"
+                }
+                sh "docker push ${DOCKER_IMAGE}"
             }
         }
     }
