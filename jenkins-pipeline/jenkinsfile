@@ -16,9 +16,10 @@ pipeline {
                 }
             }
         }
-    stage("push") {
+
+        stage("push") {
             steps {
-                environment{
+                environment {
                     DOCKER_IMAGE = "thakur156/jenkins-pipeline:${BUILD_NUMBER}"
                 }
                 sh "docker push ${DOCKER_IMAGE}"
@@ -26,4 +27,5 @@ pipeline {
         }
     }
 }
+
 
