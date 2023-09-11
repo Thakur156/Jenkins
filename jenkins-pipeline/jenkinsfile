@@ -8,6 +8,7 @@ pipeline{
         }
     stage("build"){
             steps{
+                cd 'jenkins-pipeline'
                 sh "docker build -t thakur156/jenkins-pipeline:latest ."
             }
         }
