@@ -8,7 +8,7 @@ pipeline{
         }
     stage("build"){
             steps{
-                docker build -t thakur156/jenkins-pipeline:latest
+                docker build -t thakur156/jenkins-pipeline:latest .
             }
         }
 }
