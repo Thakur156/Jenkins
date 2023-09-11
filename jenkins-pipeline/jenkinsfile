@@ -2,9 +2,7 @@ pipeline {
     agent any
 
     environment {
-        REGISTRY_CREDENTIALS = credentials('docker-cred')
         DOCKER_IMAGE = "thakur156/jenkins-pipeline:${BUILD_NUMBER}"
-        DOCKER_PASSWORD = '123456ABC123'
     }
 
     stages {
@@ -25,12 +23,21 @@ pipeline {
 
         stage("push") {
             steps {
-                script {
-                    // Log in to Docker Hub with secure password handling
-                    sh "echo '${DOCKER_PASSWORD}' | docker login -u thakur156 --password-stdin"
+                withCredentials([
+                    usernamePassword(
+                        credentialsId: 'docker-cred', 
+                        usernameVariable: 'DOCKER_USERNAME', 
+                        passwordVariable: 'DOCKER_PASSWORD'
+                    )
+                ]) {
+                    script {
+                        // Log in to Docker Hub with secure password handling
+                        sh "echo '\${DOCKER_PASSWORD}' | docker login -u '\${DOCKER_USERNAME}' --password-stdin"
+                    }
                 }
             }
         }
     }
 }
+
 
