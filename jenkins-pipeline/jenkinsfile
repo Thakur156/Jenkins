@@ -18,7 +18,7 @@ pipeline {
         }
     stage("push") {
             steps {
-                enviornment{
+                environment{
                     DOCKER_IMAGE = "thakur156/jenkins-pipeline:${BUILD_NUMBER}"
                 }
                 sh "docker push ${DOCKER_IMAGE}"
