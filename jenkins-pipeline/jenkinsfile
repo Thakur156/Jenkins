@@ -1,16 +1,21 @@
-pipeline{
+pipeline {
     agent any
-    stages{
-        stage("checkout"){
-            steps{
-                echo 'Checkingout the stage'
+
+    stages {
+        stage("checkout") {
+            steps {
+                echo 'Checking out the stage'
             }
         }
-    stage("build"){
-            steps{
-                cd 'jenkins-pipeline'
-                sh "docker build -t thakur156/jenkins-pipeline:latest ."
+
+        stage("build") {
+            steps {
+                dir('jenkins-pipeline') {
+                    // Change the working directory to 'jenkins-pipeline' before running Docker build
+                    sh "docker build -t thakur156/jenkins-pipeline:latest ."
+                }
             }
         }
+    }
 }
-}
+
