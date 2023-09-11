@@ -1,9 +1,15 @@
 pipeline{
     agent any
     stages{
-        stage("build"){
+        stage("checkout"){
             steps{
-                echo 'Building the stage'
+                echo 'Checkingout the stage'
+            }
+        }
+    
+    stage("build"){
+            steps{
+                docker build -t thakur156/jenkins-pipeline:latest
             }
         }
     }
