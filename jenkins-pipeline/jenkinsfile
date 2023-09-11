@@ -27,14 +27,14 @@ pipeline {
                     // Set the environment variable for the Docker push step
                     env.DOCKER_IMAGE = DOCKER_IMAGE
 
-                    // Retrieve Docker Hub credentials from Jenkins credentials
-                    def dockerHubCredentials = credentials('docker-cred') // Replace with your actual credentials ID
+                    // Use 'withCredentials' to securely log in to Docker Hub
+                    withCredentials([usernamePassword(credentialsId: 'docker-cred', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+                        // Log in to Docker Hub securely using credentials
+                        sh "docker login -u \$DOCKER_USERNAME -p \$DOCKER_PASSWORD"
 
-                    // Log in to Docker Hub securely using credentials with --password-stdin
-                    sh """
-                        echo \${DOCKER_PASSWORD} | docker login -u \${DOCKER_USERNAME} --password-stdin
-                        docker push \${DOCKER_IMAGE}
-                    """
+                        // Push the Docker image to Docker Hub
+                        sh "docker push \$DOCKER_IMAGE"
+                    }
                 }
             }
         }
