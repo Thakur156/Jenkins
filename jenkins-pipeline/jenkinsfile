@@ -28,7 +28,6 @@ pipeline {
                 script {
                     // Log in to Docker Hub with secure password handling
                     sh "echo '${DOCKER_PASSWORD}' | docker login -u thakur156 --password-stdin"
-                    }
                 }
             }
         }
