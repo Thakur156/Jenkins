@@ -34,7 +34,7 @@ pipeline {
           withSonarQubeEnv('sonar-server') {
             sh '''$SCANNER_HOME/bin/sonar-scanner \
                 -Dsonar.projectName=springfest \
-                -Dsonar.java.binaries=. \  // Set java.binaries to the current directory
+                -Dsonar.java.binaries=. \  
                 -Dsonar.projectKey=springfest
             '''
           }
