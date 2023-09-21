@@ -1,42 +1,42 @@
 pipeline {
-  agent {
-    docker {
-      image 'abhishekf5/maven-abhishek-docker-agent:v1'
-      args '--user root -v /var/run/docker.sock:/var/run/docker.sock' // mount Docker socket to access the host's Docker daemon
-    }
-  }
-
-  environment {
-    SCANNER_HOME = tool 'sonar-scanner'
-  }
-
-  stages {
-    stage('Checkout') {
-      steps {
-        // Use 'checkout scm' to fetch your source code
-        checkout scm
-        sh 'echo "Repository checked out"'
-      }
+    agent {
+        docker {
+            image 'abhishekf5/maven-abhishek-docker-agent:v1'
+            args '--user root -v /var/run/docker.sock:/var/run/docker.sock' // mount Docker socket to access the host's Docker daemon
+        }
     }
 
-    stage('Build and Test') {
-      steps {
-        sh 'ls -ltr'
-        // build the project and create a JAR file
-        sh 'cd java-maven-sonar-argocd-helm-k8s/spring-boot-app && mvn clean package'
-      }
+    environment {
+        SCANNER_HOME = tool 'sonar-scanner'
     }
 
-    stage('Sonar Qube Analysis') {
-      steps {
-          // Change to the directory of your project
-          withSonarQubeEnv('sonar-server') {
-            sh '''$SCANNER_HOME/bin/sonar-scanner
-            cd java-maven-sonar-argocd-helm-k8s/spring-boot-app
-            mvn sonar:sonar
-            '''
-          }
-      }
+    stages {
+        stage('Checkout') {
+            steps {
+                // Use 'checkout scm' to fetch your source code
+                checkout scm
+                sh 'echo "Repository checked out"'
+            }
+        }
+
+        stage('Build and Test') {
+            steps {
+                sh 'ls -ltr'
+                // build the project and create a JAR file
+                sh 'cd java-maven-sonar-argocd-helm-k8s/spring-boot-app && mvn clean package'
+            }
+        }
+
+        stage('Sonar Qube Analysis') {
+            steps {
+                withSonarQubeEnv('sonar-server') {
+                    sh '''$SCANNER_HOME/bin/sonar-scanner \
+                        -Dsonar.projectName=springfest \
+                        -Dsonar.java.binaries='./target/classes' \
+                        -Dsonar.projectKey=springfest
+                    '''
+                }
+            }
+        }
     }
-  }
 }
