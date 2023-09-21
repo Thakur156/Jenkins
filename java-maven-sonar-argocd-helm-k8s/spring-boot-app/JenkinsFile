@@ -8,6 +8,7 @@ pipeline {
 
   environment {
     SCANNER_HOME = tool 'sonar-scanner'
+    SONAR_URL = "http://172.17.45.229:9000"
   }
 
   stages {
@@ -27,32 +28,21 @@ pipeline {
     }
 
     stage('Static Code Analysis') {
-      environment {
-        SONAR_URL = "http://172.17.45.229:9000"
+      steps {
+        script {
+          env.PATH = "${tool 'sonar-scanner'}/bin:${env.PATH}"
+        }
+
+        withSonarQubeEnv('sonar-server') {
+          sh '''
+          cd java-maven-sonar-argocd-helm-k8s/spring-boot-app
+          sonar-scanner \
+            -Dsonar.projectName=springboot1 \
+            -Dsonar.projectKey=springboot1
+          mvn sonar:sonar
+          '''
+        }
       }
-
-      stage('Static Code Analysis') {
-  environment {
-    SONAR_URL = "http://172.17.45.229:9000"
-  }
-
-  steps {
-    script {
-      env.PATH = "${tool 'sonar-scanner'}/bin:${env.PATH}"
-    }
-
-    withSonarQubeEnv('sonar-server') {
-      sh '''
-      cd java-maven-sonar-argocd-helm-k8s/spring-boot-app
-      sonar-scanner \
-        -Dsonar.projectName=springboot1 \
-        -Dsonar.projectKey=springboot1
-      mvn sonar:sonar
-      '''
     }
   }
 }
-
-  }
-}
-
