@@ -2,7 +2,7 @@ pipeline {
     agent {
         docker {
             image 'abhishekf5/maven-abhishek-docker-agent:v1'
-            args '--user root -v /var/run/docker.sock:/var/run/docker.sock' // mount Docker socket to access the host's Docker daemon
+            args '--user root -v /var/run/docker.sock:/var/run/docker.sock'
         }
     }
 
@@ -13,7 +13,6 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                // Use 'checkout scm' to fetch your source code
                 checkout scm
                 sh 'echo "Repository checked out"'
             }
@@ -22,7 +21,6 @@ pipeline {
         stage('Build and Test') {
             steps {
                 sh 'ls -ltr'
-                // build the project and create a JAR file
                 sh 'cd java-maven-sonar-argocd-helm-k8s/spring-boot-app && mvn clean package'
             }
         }
@@ -30,13 +28,9 @@ pipeline {
         stage('Sonar Qube Analysis') {
             steps {
                 dir('java-maven-sonar-argocd-helm-k8s/spring-boot-app') {
-                    // Change to the directory of your project
                     withSonarQubeEnv('sonar-server') {
                         script {
-                            // Define the path to your Java binaries directory
                             def javaBinariesPath = './target/classes'
-
-                            // Execute SonarQube analysis with the specified Java binaries path
                             sh """$SCANNER_HOME/bin/sonar-scanner \
                                 -Dsonar.projectName=springfest \
                                 -Dsonar.projectKey=springfest \
