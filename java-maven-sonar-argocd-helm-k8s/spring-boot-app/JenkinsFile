@@ -33,7 +33,7 @@ pipeline {
           cd java-maven-sonar-argocd-helm-k8s/spring-boot-app
           $SCANNER_HOME/bin/sonar-scanner \
                         -Dsonar.projectName=springboot1 \
-                        -Dsonar.java.binaries=. \
+                         cd mvn sonar:sonar \
                         -Dsonar.projectKey=springboot1
                     '''
         }
