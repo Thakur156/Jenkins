@@ -29,16 +29,13 @@ pipeline {
 
     stage('Sonar Qube Analysis') {
       steps {
-        dir('java-maven-sonar-argocd-helm-k8s/spring-boot-app') {
           // Change to the directory of your project
           withSonarQubeEnv('sonar-server') {
-            sh '''$SCANNER_HOME/bin/sonar-scanner \
-                -Dsonar.projectName=springfest \
-                -Dsonar.projectKey=springfest
+            sh '''$SCANNER_HOME/bin/sonar-scanner
+            cd java-maven-sonar-argocd-helm-k8s/spring-boot-app
             mvn sonar:sonar
             '''
           }
-        }
       }
     }
   }
