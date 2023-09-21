@@ -7,8 +7,9 @@ pipeline {
   }
 
   environment {
-        SCANNER_HOME = tool 'sonar-scanner'
-    }
+    SCANNER_HOME = tool 'sonar-scanner'
+  }
+
   stages {
     stage('Checkout') {
       steps {
@@ -16,6 +17,7 @@ pipeline {
         //git branch: 'main', url: 'https://github.com/iam-veeramalla/Jenkins-Zero-To-Hero.git'
       }
     }
+
     stage('Build and Test') {
       steps {
         sh 'ls -ltr'
@@ -23,22 +25,24 @@ pipeline {
         sh 'cd java-maven-sonar-argocd-helm-k8s/spring-boot-app && mvn clean package'
       }
     }
+
     stage('Static Code Analysis') {
       environment {
         SONAR_URL = "http://172.17.45.229:9000"
       }
+
       steps {
         withSonarQubeEnv('sonar-server') {
           sh '''
           cd java-maven-sonar-argocd-helm-k8s/spring-boot-app
           $SCANNER_HOME/bin/sonar-scanner \
-                        -Dsonar.projectName=springboot1 \
-                         cd mvn sonar:sonar \
-                        -Dsonar.projectKey=springboot1
-                    '''
+              -Dsonar.projectName=springboot1 \
+              -Dsonar.projectKey=springboot1
+          mvn sonar:sonar
+          '''
         }
       }
     }
-    
   }
 }
+
