@@ -29,12 +29,21 @@ pipeline {
 
         stage('Sonar Qube Analysis') {
             steps {
-                withSonarQubeEnv('sonar-server') {
-                    sh '''$SCANNER_HOME/bin/sonar-scanner \
-                        -Dsonar.projectName=springfest \
-                        -Dsonar.java.binaries='./target/classes' \
-                        -Dsonar.projectKey=springfest
-                    '''
+                dir('java-maven-sonar-argocd-helm-k8s/spring-boot-app') {
+                    // Change to the directory of your project
+                    withSonarQubeEnv('sonar-server') {
+                        script {
+                            // Define the path to your Java binaries directory
+                            def javaBinariesPath = './target/classes'
+
+                            // Execute SonarQube analysis with the specified Java binaries path
+                            sh """$SCANNER_HOME/bin/sonar-scanner \
+                                -Dsonar.projectName=springfest \
+                                -Dsonar.projectKey=springfest \
+                                -Dsonar.java.binaries=$javaBinariesPath
+                            """
+                        }
+                    }
                 }
             }
         }
