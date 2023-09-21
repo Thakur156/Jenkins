@@ -8,14 +8,14 @@ pipeline {
 
   environment {
     SCANNER_HOME = tool 'sonar-scanner'
-    SONAR_URL = "http://172.17.45.229:9000"
   }
 
   stages {
     stage('Checkout') {
       steps {
-        sh 'echo passed'
-        //git branch: 'main', url: 'https://github.com/iam-veeramalla/Jenkins-Zero-To-Hero.git'
+        // Use 'checkout scm' to fetch your source code
+        checkout scm
+        sh 'echo "Repository checked out"'
       }
     }
 
@@ -27,15 +27,19 @@ pipeline {
       }
     }
 
-     stage('Sonar Qube Analysis') {
-            steps {dir('java-maven-sonar-argocd-helm-k8s/spring-boot-app'){
-                withSonarQubeEnv('sonar-server') {
-                    sh '''$SCANNER_HOME/bin/sonar-scanner \
-                        -Dsonar.projectName=Petclinic \
-                        -Dsonar.java.binaries=. \
-                        -Dsonar.projectKey=Petclinic
-                    '''
-                }
-}
+    stage('Sonar Qube Analysis') {
+      steps {
+        dir('java-maven-sonar-argocd-helm-k8s/spring-boot-app') {
+          // Change to the directory of your project
+          withSonarQubeEnv('sonar-server') {
+            sh '''$SCANNER_HOME/bin/sonar-scanner \
+                -Dsonar.projectName=springfest \
+                -Dsonar.java.binaries=. \  // Set java.binaries to the current directory
+                -Dsonar.projectKey=springfest
+            '''
+          }
+        }
+      }
+    }
   }
 }
