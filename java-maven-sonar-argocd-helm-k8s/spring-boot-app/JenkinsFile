@@ -26,6 +26,7 @@ tools {
 
         stage('SONARQUBE ANALYSIS') {
             steps {
+                sh "cd java-maven-sonar-argocd-helm-k8s/spring-boot-app"
                 withSonarQubeEnv('sonar') {
                     sh """$SCANNER_HOME/bin/sonar-scanner \
                         -Dsonar.projectName=spring \
