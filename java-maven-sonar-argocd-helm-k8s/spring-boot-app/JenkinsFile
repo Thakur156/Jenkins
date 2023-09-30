@@ -27,7 +27,7 @@ tools {
         stage('Sonar Qube Analysis') {
             steps {
                 dir('java-maven-sonar-argocd-helm-k8s/spring-boot-app') {
-                    withSonarQubeEnv('sonar-server') {
+                    withSonarQubeEnv('sonar') {
                         script {
                             def javaBinariesPath = './target/classes'
                             sh """$SCANNER_HOME/bin/sonar-scanner \
