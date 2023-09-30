@@ -24,19 +24,14 @@ tools {
             }
         }
 
-        stage('Sonar Qube Analysis') {
+        stage('SONARQUBE ANALYSIS') {
             steps {
-                dir('java-maven-sonar-argocd-helm-k8s/spring-boot-app') {
-                    withSonarQubeEnv('sonar') {
-                        script {
-                            def javaBinariesPath = './target/classes'
-                            sh """$SCANNER_HOME/bin/sonar-scanner \
-                                -Dsonar.projectName=springfest \
-                                -Dsonar.projectKey=springfest \
-                                -Dsonar.java.binaries=$javaBinariesPath
-                            """
-                        }
-                    }
+                withSonarQubeEnv('sonar') {
+                    sh """$SCANNER_HOME/bin/sonar-scanner \
+                        -Dsonar.projectName=spring \
+                        -Dsonar.java.binaries=./ \
+                        -Dsonar.projectKey=spring
+                    """
                 }
             }
         }
